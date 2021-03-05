@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id='hospital_tablet_tree' model='ir.ui.view'>
+        <field name="name">hospital.tablet.tree</field>
+        <field name="model">hospital.patient.tablet</field>
+        <field name="arch" type="xml">
+            <tree string="Tablet Details">
+                <field name="name"/>
+                <field name="qty"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='hospital_tablet_form' model='ir.ui.view'>
+        <field name="name">hospital.tablet.form</field>
+        <field name="model">hospital.patient.tablet</field>
+        <field name="arch" type="xml">
+            <form string="tablet Details">
+                <sheet>
+                    <group string="Tablet Details">
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="qty"/>
+                        </group>
+
+                    </group>
+                </sheet>
+<!--                <div class="oe_chatter">-->
+<!--                    <field name="message_follower_ids" widget="mail_followers"/>-->
+<!--                    <field name="activity_ids" widget="mail_activity"/>-->
+<!--                    <field name="message_ids" widget="mail_thread" options="{'post_refresh' : 'recipients'}"/>-->
+<!--                </div>-->
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hospital_tablet_action">
+        <field name="name">Tablet</field>
+        <field name="res_model">hospital.patient.tablet</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Tablet</p>
+        </field>
+    </record>
+
+    <menuitem id="tablet_menu" name="Tablet" parent="hospital"/>
+    <menuitem id="tablet_submenu" name="Tablet" action="hospital_tablet_action" parent="tablet_menu"/>
+
+</odoo>

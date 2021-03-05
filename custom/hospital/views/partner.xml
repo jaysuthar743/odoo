@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Add instructor field to existing view -->
+    <record model="ir.ui.view" id="partner_instructor_form_view">
+        <field name="name">partner.instructor</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <field name="uom_id" position="after">
+                <field name="description" placeholder="Description"/>
+            </field>
+            <xpath expr="//field[@name='standard_price']" position="attributes">
+                <attribute name="readonly">False</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

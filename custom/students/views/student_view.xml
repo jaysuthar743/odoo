@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id='student_tree' model='ir.ui.view'>
+        <field name="name">student.tree</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <tree string="Students">
+                <field name="name"/>
+                <field name="image" widget="image" width="50" height="50"/>
+                <field name="code"/>
+                <field name="gender"/>
+                <field name="dob"/>
+                <field name="age"/>
+                <field name="age_group"/>
+                <field name="address"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='student_form' model='ir.ui.view'>
+        <field name="name">student.form</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <form string="Student">
+                <sheet>
+                    <group string="Student Details">
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                        <group>
+                            <field name="gender"/>
+                        </group>
+                        <group>
+                            <field name="dob"/>
+                        </group>
+                        <group>
+                            <field name="age"/>
+                        </group>
+                        <group>
+                            <field name="age_group"/>
+                        </group>
+                        <table>
+                            <div class="o_address_format">
+                                <tr>
+                                    <td><field name="street" placeholder="Street..." style="width:220%"
+                                               class="o_address_street"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><field name="street2" placeholder="Street 2..." style="width:220%"
+                                               class="o_address_street"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><field name="city" placeholder="City"/></td>
+                                    <td><field name="state" placeholder="State"/></td>
+                                    <td><field name="zip" placeholder="Zip"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><field name="country" placeholder="Country" style="width:220%"
+                                               class="o_address_country"/></td>
+                                </tr>
+                            </div>
+                        </table>
+                        <group>
+                            <field name="address"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Details">
+                            <sheet>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                                <group>
+                                    <field name="code"/>
+                                </group>
+                                <group>
+                                    <field name="gender"/>
+                                </group>
+                            </sheet>
+                        </page>
+                        <page string="Image">
+                            <group>
+                                <field name="image" widget="image"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh' : 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id='student_graph' model='ir.ui.view'>
+        <field name="name">student.graph</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <graph string="Student Graph View">
+                <field name="name"/>
+                <field name="age" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id='student_calender' model='ir.ui.view'>
+        <field name="name">student.calender</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <calendar string="Calender" date_start="dob">
+                <field name="name"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="student_kanban_view" model="ir.ui.view">
+        <field name="name">student.kanban.view</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_employee_master_kanban">
+                            <div class="o_kanban_image_fill_left o_kanban_image_full" style="width:120px;height:90px;">
+                                <field name="image" widget="image" class="oe_right oe_avatar"/>
+                            </div>
+
+                            <div class="oe_kanban_details">
+                                <ul>
+                                    <li style="color:blue; font-size: 22px;">
+                                        <field name="name"/>
+                                    </li>
+                                    <li style="font-size: 15px;">
+                                        <field name="code"/>
+                                    </li>
+                                    <li style="font-size: 15px;">
+                                        <field name="address"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id='student_search' model='ir.ui.view'>
+        <field name="name">student.search</field>
+        <field name="model">student</field>
+        <field name="arch" type="xml">
+            <search string="Search Student">
+                <field name="name" filter_domain="['|',('code', 'ilike', self),('name', 'ilike', self) ]"/>
+                <filter name="gender" string="Male" domain="[('gender','=','male')]"/>
+                <filter name="gender" string="Female" domain="[('gender','=','female')]"/>
+                <filter string="DOB" name="dob" date="create_date"/>
+                <group>
+                    <filter name="groupby_gender" string="Gender" context="{'group_by':'gender'}"></filter>
+                </group>
+
+                <group>
+                    <filter name="groupby_age_group" string="Age group" context="{'group_by':'age_group'}"></filter>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="student_pivot" model="ir.actions.act_window">
+        <field name="name">Student Pivot</field>
+        <field name="res_model">student</field>
+        <field name="view_mode">pivot</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html"><p class="oe_view_nocontent_create">Enter the target </p></field>
+    </record>
+
+    <record model="ir.actions.act_window" id="student_action">
+        <field name="name">Student</field>
+        <field name="res_model">student</field>
+        <field name="view_mode">tree,form,search,graph,kanban,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Student</p>
+        </field>
+    </record>
+
+    <menuitem id="dashboard" name="Student"/>
+    <menuitem id="student_menu" name="Student" parent="dashboard"/>
+    <menuitem id="student_submenu" name="Student" action="student_action" parent="student_menu"/>
+
+</odoo>

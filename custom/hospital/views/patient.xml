@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id='hospital_patient_tree' model='ir.ui.view'>
+        <field name="name">Hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree string="Patient Details" decoration-bf="True" decoration-it="True" decoration-success="age&lt;18"
+                  decoration-primary="age&gt;18" class="align-items-center">
+                <field name="name"/>
+                <field name="age"/>
+                <field name="notes"/>
+                <field name="doctor_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='hospital_patient_form' model='ir.ui.view'>
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form string="Patient Details">
+                <header>
+                    <button name="action_done" type="object" string="Done" states="draft" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group col="4">
+                        <field name="age"/>
+                        <field name="notes"/>
+                        <field name="doctor_id"/>
+                        <field name="image" widget="image"/>
+                    </group>
+                    <notebook>
+                        <page string="Tablet">
+                            <field name="patient_tablet_line_id" class="section_and_note_one2many">
+                                <tree editable="bottom">
+                                    <field name="tablet_ids" widget="selection"/>
+                                    <field name="tablet_qty"/>
+                                    <field name="tablet_price"/>
+                                    <field name="total_price" widget="monetary"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2">
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="total"/>
+                                </div>
+                                <field name="total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary'/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='patient_search' model='ir.ui.view'>
+        <field name="name">Patient Search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search string="Search Student">
+                <field name="name" filter_domain="['|',('doctor_id', 'ilike', self),('name', 'ilike', self) ]"/>
+                <filter name="state_draft" string="State: Draft" domain="[('state','=','draft')]"/>
+                <filter name="age" string="Age>18" domain="[('age','>', 18)]"/>
+                <filter name="age" string="Age>18 or State:Done" domain="['|', ('age','>', 18), ('state','=','done')]"/>
+                <filter name="age" string="Age>18 and State:Done" domain="[('age','>', 18), ('state','=','done')]"/>
+                <group>
+                    <filter name="groupby_state" string="State" context="{'group_by':'state'}"></filter>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hospital_patient_action">
+        <field name="name">Hospital Patient </field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="context">{"search_default_state_Sdone": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Patient</p>
+        </field>
+    </record>
+
+    <menuitem id="hospital" name="Hospital"/>
+    <menuitem id="patient_menu" name="Patient" parent="hospital"/>
+    <menuitem id="patient_submenu" name="Patient" action="hospital_patient_action" parent="patient_menu"/>
+
+</odoo>
