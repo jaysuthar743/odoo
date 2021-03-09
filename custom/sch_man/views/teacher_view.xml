@@ -11,7 +11,7 @@
                 <field name="email" widget="email"/>
                 <field name="experience"/>
                 <field name="address"/>
-                <field name="joining_date"  widget="remaining_days" />
+                <field name="joining_date" widget="remaining_days"/>
             </tree>
         </field>
     </record>
@@ -39,13 +39,14 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <group col="4">
-                        <field name="age" widget="char"/>
-                        <field name="phone" />
+                        <field name="age"/>
+                        <field name="phone"/>
                         <field name="email" widget="email"/>
                         <field name="experience"/>
                         <field name="address"/>
-                        <field name="need_demo"  widget="boolean_toggle" attrs="{'readonly':[('state', 'in', ['demo', 'done'])]}"/>
-                        <field name="joining_date" widget="remaining_days"
+                        <field name="need_demo" widget="boolean_toggle"
+                               attrs="{'readonly':[('state', 'in', ['demo', 'done'])]}"/>
+                        <field name="joining_date"
                                attrs="{'invisible': [('state','!=', 'done')],'required':[('state','=', 'done')]}"/>
                     </group>
                     <notebook>
@@ -81,7 +82,7 @@
         <field name="name">Teacher</field>
         <field name="res_model">school.teacher</field>
         <field name="view_mode">tree,form,search</field>
-        <!--        <field name="context">{"search_default_state_Sdone": 1}</field>-->
+        <!--  <field name="context">{"search_default_state_done": 1}</field>-->
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Enter Details of Teacher</p>
         </field>

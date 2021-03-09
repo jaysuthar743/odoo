@@ -18,7 +18,7 @@ class Teacher(models.Model):
                               ("demo", "Demo"),
                               ("done", "Done")], default="draft", string="Teacher State")
     joining_date = fields.Date("Joining Date")
-    need_demo = fields.Boolean("Need Demo?")
+    need_demo = fields.Boolean("Need Demo")
     doc_id = fields.One2many("school.document", "teacher_id", string="Upload Documents")
     student_ids = fields.One2many("school.student", 'teacher_id', string="Student")
 
@@ -62,18 +62,8 @@ class Student(models.Model):
 
     name = fields.Char("Name", required=True)
     age = fields.Integer("Age", required=True)
-    std = fields.Selection([("1", "1"),
-                              ("2", "2"),
-                              ("3", "3"),
-                              ("4", "4"),
-                              ("5", "5"),
-                              ("6", "6"),
-                              ("7", "7"),
-                              ("8", "8"),
-                              ("9", "9"),
-                              ("10", "10")], default='1', required=True, string="Std.")
     gender = fields.Selection([("male", "Male"),
-                              ("female", "Female")], default='male', required=True,  string="Gender")
+                               ("female", "Female")], default='male', required=True, string="Gender")
 
     state = fields.Selection([("draft", "Draft"),
                               ("process", "Process"),
@@ -81,6 +71,7 @@ class Student(models.Model):
     address = fields.Text("Address", required=True)
     image = fields.Binary("Student Image", required=True)
     teacher_id = fields.Many2one("school.teacher", domain=[("state", "=", "done")], string='Teacher')
+    standard_id = fields.Many2one("school.standard")
 
     def action_process(self):
         for rec in self:
@@ -89,6 +80,23 @@ class Student(models.Model):
     def action_done(self):
         for rec in self:
             rec.state = "done"
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = []
+        print("\n\n\n\n\n\n \n\n\n----------------------------------------", args)
+        if name:
+            domain = ['|', ('name', operator, name), ('teacher_id', operator, name)]
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+
+
+class Standard(models.Model):
+    _name = 'school.standard'
+    _description = 'Standard Model'
+
+    teacher_id = fields.Many2many("school.teacher")
+    std = fields.Integer("Standard", required=True)
 
 
 class Document(models.Model):

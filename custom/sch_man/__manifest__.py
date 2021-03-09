@@ -27,6 +27,7 @@
         'security/ir.model.access.csv',
         'views/teacher_view.xml',
         'views/student_view.xml',
+        'views/standard_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
