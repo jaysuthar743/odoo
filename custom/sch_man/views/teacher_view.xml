@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id='school_teacher_tree' model='ir.ui.view'>
+        <field name="name">School Teacher Tree View</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <tree string="Teacher Details" decoration-bf="True" decoration-it="True" class="align-items-center">
+                <field name="name"/>
+                <field name="age"/>
+                <field name="phone" widget="phone"/>
+                <field name="email" widget="email"/>
+                <field name="experience"/>
+                <field name="address"/>
+                <field name="joining_date"  widget="remaining_days" />
+            </tree>
+        </field>
+    </record>
+
+    <record id='school_teacher_form' model='ir.ui.view'>
+        <field name="name">School Teacher Form View</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <form string="Teacher Details">
+                <header>
+                    <button name="search_demo" type="object" string="search"
+                            class="oe_highlight"/>
+                    <button name="action_process" type="object" string="Process"
+                            attrs="{'invisible':[('state', '!=', 'draft')]}" class="oe_highlight"/>
+                    <button name="action_demo" type="object" string="Demo"
+                            attrs="{'invisible':['|',('need_demo', '!=', True), ('state', 'in', ['draft', 'done', 'demo'])]}"
+                            class="oe_highlight"/>
+                    <button name="action_done" type="object" string="Done"
+                            attrs="{'invisible':[ ('state', 'not in', ['process', 'demo'])]}" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,process,demo,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group col="4">
+                        <field name="age" widget="char"/>
+                        <field name="phone" />
+                        <field name="email" widget="email"/>
+                        <field name="experience"/>
+                        <field name="address"/>
+                        <field name="need_demo"  widget="boolean_toggle" attrs="{'readonly':[('state', 'in', ['demo', 'done'])]}"/>
+                        <field name="joining_date" widget="remaining_days"
+                               attrs="{'invisible': [('state','!=', 'done')],'required':[('state','=', 'done')]}"/>
+                    </group>
+                    <notebook>
+                        <page string="Documents">
+                            <field name="doc_id">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="doc_date"/>
+                                    <field name="doc"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Students">
+                            <field name="student_ids" widget="one2many">
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='school_teacher_search' model='ir.ui.view'>
+        <field name="name">Teacher Search</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <search>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="school_teacher_action">
+        <field name="name">Teacher</field>
+        <field name="res_model">school.teacher</field>
+        <field name="view_mode">tree,form,search</field>
+        <!--        <field name="context">{"search_default_state_Sdone": 1}</field>-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Teacher</p>
+        </field>
+    </record>
+
+    <menuitem id="school_root" name="School Management"/>
+    <menuitem id="school_teacher_menu" name="Teacher" parent="school_root" action="school_teacher_action"/>
+
+</odoo>
+

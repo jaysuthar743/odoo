@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id='school_teacher_tree' model='ir.ui.view'>
+        <field name="name">School Teacher Tree View</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+                <tree string="Teacher Details" decoration-bf="True" decoration-it="True" class="align-items-center">
+                    <field name="recruitment_id">
+                    </field>
+                </tree>
+        </field>
+    </record>
+
+    <record id='school_teacher_form' model='ir.ui.view'>
+        <field name="name">School Teacher Form View</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <form string="Teacher Details" >
+                <header></header>
+                <sheet>
+                    <group>
+                            <field name="id"/>
+                    </group>
+                    <notebook>
+                        <page string="Teachers">
+                            <field name="student_id" >
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="age"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='school_teacher_search' model='ir.ui.view'>
+        <field name="name">Teacher Search</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <search>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="school_teacher_action">
+        <field name="name">Teacher</field>
+        <field name="res_model">school.teacher</field>
+        <field name="view_mode">tree,form,search</field>
+        <!--        <field name="context">{"search_default_state_Sdone": 1}</field>-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Teacher</p>
+        </field>
+    </record>
+
+    <menuitem id="school_teacher_menu" name="Teacher" parent="school_root" action="school_teacher_action"/>
+
+</odoo>

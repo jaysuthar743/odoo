@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id='school_recruitment_tree' model='ir.ui.view'>
+        <field name="name">School recruitment Tree View</field>
+        <field name="model">school.recruitment</field>
+        <field name="arch" type="xml">
+            <tree string="Recruitment Details" decoration-bf="True" decoration-it="True" class="align-items-center">
+                <field name="name"/>
+                <field name="age"/>
+                <field name="experience"/>
+                <field name="joining_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id='school_recruitment_form' model='ir.ui.view'>
+        <field name="name">School recruitment Form View</field>
+        <field name="model">school.recruitment</field>
+        <field name="arch" type="xml">
+            <form string="Teacher Details">
+                <header>
+                    <button name="action_process" type="object" string="Process" states="draft" class="oe_highlight"/>
+                    <button name="action_demo" type="object" string="Need Demo" states="process" class="oe_highlight"/>
+                    <button name="action_done" type="object" string="Done" states="demo" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,process,demo,done,"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group col="4">
+                        <field name="age"/>
+                        <field name="experience"/>
+                        <field name="joining_date" attrs="{'invisible':[('state', '!=', 'done')]}"/>
+                    </group>
+                    <notebook>
+                        <page string="Documents">
+                            <field name="doc_id" class="section_and_note_one2many">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="doc_date"/>
+                                    <field name="doc"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id='school_recruitment_search' model='ir.ui.view'>
+        <field name="name">Patient Search</field>
+        <field name="model">school.recruitment</field>
+        <field name="arch" type="xml">
+            <search string="Search Teacher">
+                <!--                <field name="name" filter_domain="['|',('doctor_id', 'ilike', self),('name', 'ilike', self) ]"/>-->
+                <!--                <filter name="state_draft" string="State: Draft" domain="[('state','=','draft')]"/>-->
+                <!--                <filter name="age" string="Age>18" domain="[('age','>', 18)]"/>-->
+                <!--                <filter name="age" string="Age>18 or State:Done" domain="['|', ('age','>', 18), ('state','=','done')]"/>-->
+                <!--                <filter name="age" string="Age>18 and State:Done" domain="[('age','>', 18), ('state','=','done')]"/>-->
+                <!--                <group>-->
+                <!--                    <filter name="groupby_state" string="State" context="{'group_by':'state'}"></filter>-->
+                <!--                </group>-->
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="school_recruitment_action">
+        <field name="name">Recruitment</field>
+        <field name="res_model">school.recruitment</field>
+        <field name="view_mode">tree,form,search</field>
+        <!--        <field name="context">{"search_default_state_Sdone": 1}</field>-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Recruiter</p>
+        </field>
+    </record>
+
+    <menuitem id="school_root" name="School Management"/>
+    <menuitem id="school_recruitment_menu" name="Recruitment" parent="school_root" action="school_recruitment_action"/>
+
+</odoo>

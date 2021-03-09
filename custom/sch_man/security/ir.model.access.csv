@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_school_teacher,access_school_teacher,sch_man.model_school_teacher,base.group_user,1,1,1,1
+access_school_student,access_school_student,sch_man.model_school_student,base.group_user,1,1,1,1
+access_school_document,access_school_document,sch_man.model_school_document,base.group_user,1,1,1,1
