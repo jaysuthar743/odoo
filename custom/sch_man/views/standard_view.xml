@@ -5,7 +5,6 @@
         <field name="model">school.standard</field>
         <field name="arch" type="xml">
             <tree string="Standard Details" decoration-bf="True" decoration-it="True" class="align-items-center">
-                <field name="teacher_id"/>
                 <field name="std"/>
             </tree>
         </field>
@@ -20,13 +19,8 @@
                 </header>
                 <sheet>
                     <group col="4">
-                        <field name="teacher_id"/>
                         <field name="std"/>
                     </group>
-                    <notebook>
-                        <page string="Documents">
-                        </page>
-                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -45,7 +39,7 @@
         <field name="name">Standard</field>
         <field name="res_model">school.standard</field>
         <field name="view_mode">tree,form,search</field>
-        <!--  <field name="context">{"search_default_state_done": 1}</field>-->
+       <field name="context">{'std':'std'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Enter Details of Standard</p>
         </field>

@@ -25,6 +25,7 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
         'views/teacher_view.xml',
         'views/student_view.xml',
         'views/standard_view.xml',
