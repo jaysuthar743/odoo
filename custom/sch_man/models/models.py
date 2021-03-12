@@ -132,6 +132,13 @@ class Standard(models.Model):
     _description = 'Standard Model'
     _rec_name = 'std'
 
+    @api.model
+    def name_get(self):
+        res = []
+        for rec in self:
+            res.append((rec.id, 'Standard - %s' % (rec.std)))
+        return res
+
     std = fields.Selection([('1', '1'),
                             ('2', '2'),
                             ('3', '3'),

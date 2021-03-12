@@ -49,7 +49,7 @@
                         <field name="need_demo" widget="boolean_toggle"
                                attrs="{'readonly':[('state', 'in', ['demo', 'done'])]}"/>
                         <field name="joining_date"
-                               attrs="{'invisible': [('state','!=', 'done')],'required':[('state','=', 'done')]}"/>
+                               attrs="{'invisible': [('state','!=', 'done')], 'required':[('state','=', 'done')]}"/>
                     </group>
                     <notebook>
                         <page string="Documents">

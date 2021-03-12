@@ -34,7 +34,8 @@
                            options="{&quot;zoom&quot;: true, &quot;preview_image&quot;:&quot;image&quot;}"/>
 
                     <div class="oe_title">
-                        <label for="seq_student" class="oe_edit_only" string="Name"/>
+                        <label for="seq_student" class="d
+                        oe_edit_only" string="Name"/>
                         <h1>
                             <field name="seq_student"/>
                         </h1>
@@ -47,7 +48,7 @@
                         <field name="address"/>
                     </group>
                     <notebook>
-                        <page string="Teacher" attrs="{'visible':[('state', '!=', 'done')]}">
+                        <page string="Teacher" attrs="{'invisible':[('state', '!=', 'done')]}">
                             <field name="teacher_id" context="{'std': standard_id }">
                             </field>
                         </page>

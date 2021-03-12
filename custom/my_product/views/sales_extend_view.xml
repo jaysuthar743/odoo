@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="my_product.form2">
+            <field name="name">Product Brand</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="payment_term_id" position="after">
+                    <field name="product_brand_ids" placeholder="Product Template Extend" widget="many2one"/>
+                </field>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="context">{'prod_id': parent.product_brand_ids}</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="my_product.form1">
+            <field name="name">Product Brand</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="barcode" position="after">
+                    <field name="product_brand_ids" placeholder="Product Template Extend" widget="many2one"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
