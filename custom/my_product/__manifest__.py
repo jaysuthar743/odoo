@@ -28,7 +28,7 @@
         'views/product_view.xml',
         'views/product_brand_extend_view.xml',
         'views/sales_extend_view.xml',
-        # 'views/sales_line_extend_view.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [

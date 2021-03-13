@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hotel_room,access_hotel_room,hotel_man.model_hotel_room,base.group_user,1,1,1,1
+access_hotel_room_type,access_hotel_room_type,hotel_man.model_hotel_room_type,base.group_user,1,1,1,1
+access_hotel_room_registration,access_hotel_room_registration,hotel_man.model_hotel_room_registration,base.group_user,1,1,1,1
+access_hotel_document,access_hotel_document,hotel_man.model_hotel_document,base.group_user,1,1,1,1
+access_hotel_registration_inquiry_wizard,access_hotel_registration_inquiry_wizard,hotel_man.model_hotel_registration_inquiry_wizard,base.group_user,1,1,1,1
+access_hotel_room_booked,access_hotel_room_booked,hotel_man.model_hotel_room_booked,base.group_user,1,1,1,1

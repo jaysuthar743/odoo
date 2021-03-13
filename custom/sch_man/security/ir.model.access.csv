@@ -3,3 +3,4 @@ access_school_teacher,access_school_teacher,sch_man.model_school_teacher,base.gr
 access_school_student,access_school_student,sch_man.model_school_student,base.group_user,1,1,1,1
 access_school_document,access_school_document,sch_man.model_school_document,base.group_user,1,1,1,1
 access_school_standard,access_school_standard,sch_man.model_school_standard,base.group_user,1,1,1,1
+access_school_student_wizard,access_school_student_wizard,sch_man.model_school_student_wizard,base.group_user,1,1,1,1

@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id='hotel_reg_inquiry_wizard_view' model='ir.ui.view'>
+        <field name="name">Hotel Registration Inquiry</field>
+        <field name="model">hotel.registration.inquiry.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Inquiry Details">
+                <group>
+                    <field name="customer_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="room_type"/>
+                    <field name="room_size"/>
+                </group>
+                <footer>
+                    <button name="search_available_room" type="object" string="Search"
+                            class="oe_right oe_highlight" />
+                    <button string="Cancel" special="cancel" class="oe_right"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hotel_reg_inquiry" model="ir.actions.act_window">
+        <field name="name">Inquiry</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hotel.registration.inquiry.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="hotel_reg_inquiry_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+  <menuitem id="hotel_reg_inquiry_action" name="Inquiry"  parent="hotel_reg_menu" action="hotel_reg_inquiry"/>
+
+</odoo>

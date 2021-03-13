@@ -159,3 +159,20 @@ class Document(models.Model):
     doc_date = fields.Date("Date")
     doc = fields.Binary("Document")
     teacher_id = fields.Many2one("school.teacher")
+
+
+class StudentWizard(models.TransientModel):
+    _name = 'school.student.wizard'
+
+    def _get_default_students(self):
+        return self.env['school.student'].browse(self.env.context.get("active_ids"))
+
+    student_ids = fields.Many2many("school.student", String="Students")
+    level = fields.Char("Level", required=True)
+
+    def set_student_level(self):
+        for rec in self:
+            if rec.student_ids:
+                rec.level = self.level
+
+

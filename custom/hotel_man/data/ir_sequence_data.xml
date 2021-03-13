@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="sequence_hotel_room" model="ir.sequence">
+        <field name="name">Hotel Room Sequence</field>
+        <field name="code">hotel.room.sequence</field>
+        <field name="active">TRUE</field>
+        <field name="prefix">r_</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+    </record>
+
+
+    <record id="sequence_hotel_reg" model="ir.sequence">
+        <field name="name">Hotel Registration Sequence</field>
+        <field name="code">hotel.room.reg</field>
+        <field name="active">TRUE</field>
+        <field name="prefix">reg_</field>
+        <field name="padding">4</field>
+        <field name="number_increment">1</field>
+    </record>
+
+</odoo>

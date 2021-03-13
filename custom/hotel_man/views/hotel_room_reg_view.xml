@@ -1,0 +1,92 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="hotel_room_reg_list">
+            <field name="name">hotel_man list</field>
+            <field name="model">hotel.room.registration</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="reg_no"/>
+                    <field name="customer_name"/>
+                    <field name="mobile_no"/>
+                    <field name="birthdate"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="reg_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='hotel_room_registration_form' model='ir.ui.view'>
+            <field name="name">hotel_room registration</field>
+            <field name="model">hotel.room.registration</field>
+            <field name="arch" type="xml">
+                <form string="hotel_room Details">
+                    <header>
+                        <button name="action_process" type="object"  string="Process"  attrs="{'invisible':[('reg_state', '!=', 'draft')]}"  class="oe_highlight"/>
+                        <button name="action_done" type="object" string="Done"  attrs="{'invisible':[('reg_state', '!=', 'process')]}"  class="oe_highlight"/>
+                        <field name="reg_state" widget="statusbar" statusbar_visible="draft,process,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="reg_no" class="doe_edit_only" string="Registration No."/>
+                            <h1>
+                                <field name="reg_no"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <field name="customer_name"/>
+                            <field name="mobile_no"/>
+                            <field name="birthdate"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <notebook>
+                            <page string="Documents">
+                                <field name="document_id">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="doc_date"/>
+                                        <field name="doc"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Guests">
+                                <field name="guest_id">
+                                    <tree editable="bottom">
+                                        <field name="parent_id"/>
+                                        <field name="name"/>
+                                        <field name="parent_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id='hotel_room_registration_search' model='ir.ui.view'>
+            <field name="name">Room Search</field>
+            <field name="model">hotel.room</field>
+            <field name="arch" type="xml">
+                <search>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="hotel_room_registration_action">
+            <field name="name">Hotel Management</field>
+            <field name="res_model">hotel.room.registration</field>
+            <field name="view_mode">tree,form,search</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Enter Details of Room</p>
+            </field>
+        </record>
+
+        <menuitem id="hotel_reg_menu" name="Registration" parent="hotel_root"/>
+        <menuitem id="hotel_reg_action" name="Registration" parent="hotel_reg_menu"
+                  action="hotel_room_registration_action"/>
+
+    </data>
+</odoo>

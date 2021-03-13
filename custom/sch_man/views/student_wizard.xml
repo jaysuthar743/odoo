@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id='school_student_wizard_view' model='ir.ui.view'>
+        <field name="name">School Student Form View</field>
+        <field name="model">school.student.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Student Details">
+                <group>
+                    <field name="student_ids"/>
+                    <field name="level"/>
+                </group>
+                <footer>
+                    <button name="set_student_level" type="object" string="Update Level"
+                            class="oe_right oe_highlight"/>
+                    <button string="Cancel" special="cancel" class="oe_right"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_view_wizard" model="ir.actions.act_window">
+        <field name="name">Student Level</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">school.student.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="school_student_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="school_student_wizard_menu" name="Wizard" parent="school_root" action="action_view_wizard"/>
+
+</odoo>

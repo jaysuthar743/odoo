@@ -6,7 +6,7 @@
             <field name="name">product_brand</field>
             <field name="model">product.brand</field>
             <field name="arch" type="xml">
-                <tree string="product_brand Details" decoration-bf="True" decoration-it="True"
+                <tree string="product_brand Details" sample="1" decoration-bf="True" decoration-it="True"
                       class="align-items-center">
                     <field name="name"/>
                     <field name="code"/>
@@ -26,8 +26,8 @@
                             <label for="name" class="oe_edit_only" string="Name"/>
                             <h1><field name="name"/></h1>
                         </div>
-                        <group col="4">
-                            <field name="code"/>
+                        <group col="2">
+                            <field name="code" style="width:40%%"/>
                         </group>
                     </sheet>
                 </form>
@@ -38,6 +38,11 @@
             <field name="name">Product Brand</field>
             <field name="res_model">product.brand</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="xml">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new product brand
+                </p>
+            </field>
         </record>
 
         <menuitem name="Product Brand" id="product_brand_menu" parent="sale.menu_sale_config"

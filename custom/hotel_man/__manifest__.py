@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "school_management",
+    'name': "hotel_man",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -26,10 +26,12 @@
     'data': [
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
-        'views/teacher_view.xml',
-        'views/student_view.xml',
-        'views/standard_view.xml',
-        'views/student_wizard.xml',
+        'views/hotel_room_view.xml',
+        'views/hotel_reg_inquiry_wizard.xml',
+        'views/hotel_room_reg_view.xml',
+        'views/hotel_room_type_view.xml',
+        'views/hotel_room_booked_wizard.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [
