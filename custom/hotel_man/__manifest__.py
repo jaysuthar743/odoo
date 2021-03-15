@@ -30,7 +30,7 @@
         'views/hotel_reg_inquiry_wizard.xml',
         'views/hotel_room_reg_view.xml',
         'views/hotel_room_type_view.xml',
-        'views/hotel_room_booked_wizard.xml',
+        # 'views/hotel_room_booked_wizard.xml',
 
     ],
     # only loaded in demonstration mode

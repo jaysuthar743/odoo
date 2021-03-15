@@ -6,14 +6,14 @@
         <field name="model">hotel.room.booked</field>
         <field name="arch" type="xml">
             <form string="Inquiry Details">
-                <group>
-                    <field name="hotel_room_ids"/>
-                </group>
-                <footer>
+                <header>
                     <button name="room_book" type="object" string="Search"
-                            class="oe_right oe_highlight" />
+                            class="oe_right oe_highlight"/>
                     <button string="Cancel" special="cancel" class="oe_right"/>
-                </footer>
+                </header>
+                <group>
+                    <field name="hotel_room_ids" widget="radio"/>
+                </group>
             </form>
         </field>
     </record>
@@ -28,5 +28,15 @@
         <field name="target">new</field>
     </record>
 
+    <record model="ir.actions.act_window" id="hotel_room_type_action">
+        <field name="name">Hotel Management</field>
+        <field name="res_model">hotel.room.booked</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Room Book</p>
+        </field>
+    </record>
+<!--    <menuitem id="hotel_room_book_action" name="Book" parent="hotel_reg_menu"-->
+              action="hotel_room_type_action"/>
 
 </odoo>
