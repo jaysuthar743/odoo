@@ -1,66 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <odoo>
-  <data>
+    <data>
+        <record model="ir.ui.view" id="hotel_room_list">
+            <field name="name">hotel_man list</field>
+            <field name="model">hotel.room</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="room_no"/>
+                    <field name="room_type_id"/>
+                    <field name="room_state"/>
+                    <field name="room_booked"/>
+                    <field name="room_size"/>
+                </tree>
+            </field>
+        </record>
 
-    <record model="ir.ui.view" id="hotel_room_list">
-      <field name="name">hotel_man list</field>
-      <field name="model">hotel.room</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="room_no"/>
-          <field name="room_type_id"/>
-          <field name="room_floor"/>
-          <field name="room_size"/>
-          <field name="room_state"/>
-        </tree>
-      </field>
-    </record>
+
+        <record id='hotel_room_form' model='ir.ui.view'>
+            <field name="name">hotel_room </field>
+            <field name="model">hotel.room</field>
+            <field name="arch" type="xml">
+                <form string="hotel_room Details">
+                    <header>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="room_no" class="doe_edit_only" string="Room No."/>
+                            <h1>
+                                <field name="room_no"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <field name="room_type_id"/>
+                            <field name="room_floor"/>
+                            <field name="room_size"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
 
-    <record id='hotel_room_form' model='ir.ui.view'>
-        <field name="name">hotel_room </field>
-        <field name="model">hotel.room</field>
-        <field name="arch" type="xml">
-            <form string="hotel_room Details">
-                <header>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <label for="room_no" class="doe_edit_only" string="Room No."/>
-                        <h1>
-                            <field name="room_no"/>
-                        </h1>
-                    </div>
-                    <group col="4">
-                        <field name="room_type_id" />
-                        <field name="room_floor"/>
-                        <field name="room_size"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+        <record model="ir.actions.act_window" id="hotel_room_action">
+            <field name="name">Hotel Management</field>
+            <field name="res_model">hotel.room</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Enter Details of Room</p>
+            </field>
+        </record>
 
-    <record id='hotel_room_search' model='ir.ui.view'>
-        <field name="name">Room Search</field>
-        <field name="model">hotel.room</field>
-        <field name="arch" type="xml">
-            <search>
-            </search>
-        </field>
-    </record>
+        <menuitem id="hotel_root" name="Hotel Management"/>
+        <menuitem id="hotel_room_menu" name="Room" parent="hotel_root"/>
+        <menuitem id="hotel_room_action_menu" name="Room" parent="hotel_room_menu" action="hotel_room_action"/>
 
-    <record model="ir.actions.act_window" id="hotel_room_action">
-        <field name="name">Hotel Management</field>
-        <field name="res_model">hotel.room</field>
-        <field name="view_mode">tree,form,search</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">Enter Details of Room</p>
-        </field>
-    </record>
-
-    <menuitem id="hotel_root" name="Hotel Management" />
-    <menuitem id="hotel_room_menu" name="Room" parent="hotel_root"/>
-    <menuitem id="hotel_room_action" name="Room"  parent="hotel_room_menu" action="hotel_room_action"/>
-
-  </data>
+    </data>
 </odoo>

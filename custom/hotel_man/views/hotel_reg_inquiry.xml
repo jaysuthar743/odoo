@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+<!--    <record id='hotel_reg_inquiry_tree_view' model='ir.ui.view'>-->
+<!--        <field name="name">Hotel Registration Inquiry</field>-->
+<!--        <field name="model">hotel.registration.inquiry</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <tree string="Room Inquiry Details" decoration-bf="True" decoration-it="True" class="align-items-center">-->
+<!--                <field name="customer_id"/>-->
+<!--            </tree>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id='hotel_reg_inquiry_form_view' model='ir.ui.view'>
+        <field name="name">Hotel Registration Inquiry</field>
+        <field name="model">hotel.registration.inquiry</field>
+        <field name="arch" type="xml">
+            <form string="Inquiry Details">
+                <header>
+                    <button name="search_room" type="object" string="Search" class="oe_highlight" />
+                    <button name="submit_inquiry" type="object" string="Submit" class="oe_highlight"
+                            context="{'default_room_type_id' : room_type,
+                                      'default_customer_id': customer_id,
+                                      'default_start_date': start_date,
+                                      'default_end_date': end_date,
+                                      'default_room_size': room_size
+                                     }"  />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="customer_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="room_type"/>
+                        <field name="room_size"/>
+                    </group>
+                    <notebook>
+                        <group string="Room">
+                            <field name="room_ids" widget="many2many" >
+                                <tree editable="bottom">
+                                    <field name="room_no"/>
+                                    <field name="room_booked" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="hotel_reg_inquiry_action">
+        <field name="name">Hotel Management</field>
+        <field name="res_model">hotel.registration.inquiry</field>
+        <field name="view_mode">form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Enter Details of Reg. Inquiry</p>
+        </field>
+    </record>
+
+    <menuitem id="hotel_reg_inquiry_action" name="Inquiry" parent="hotel_reg_menu" action="hotel_reg_inquiry_action"
+              sequence="-10"/>
+
+</odoo>

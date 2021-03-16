@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="reg_no"/>
-                    <field name="customer_name"/>
+                    <field name="customer_id"/>
                     <field name="mobile_no"/>
                     <field name="birthdate"/>
                     <field name="start_date"/>
@@ -37,13 +37,12 @@
                             </h1>
                         </div>
                         <group col="4">
-                            <field name="customer_name"/>
+                            <field name="customer_id"/>
                             <field name="mobile_no"/>
                             <field name="birthdate"/>
                             <field name="start_date"/>
                             <field name="end_date"/>
-                            <field name="room_type_id"/>
-
+                            <field name="room_type_id" />
                         </group>
                         <notebook>
                             <page string="Documents">
@@ -65,8 +64,10 @@
                                 </field>
                             </page>
                             <page string="Room">
-                                <field name="room_no" context="{'room_type_id': room_type_id}">
+                                <field name="room_no"
+                                       context="{'room_type_id': room_type_id, 'start_date': start_date, 'end_date': end_date}">
                                     <tree editable="bottom">
+                                        <field name="room_no"/>
                                     </tree>
                                 </field>
                             </page>

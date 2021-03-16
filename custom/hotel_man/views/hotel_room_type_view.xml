@@ -6,7 +6,6 @@
             <field name="model">hotel.room.type</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="id"/>
                     <field name="room_type"/>
                 </tree>
             </field>
