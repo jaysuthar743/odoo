@@ -20,17 +20,19 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'mail'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
+        'data/ir.cron_data.xml',
         'views/hotel_room_view.xml',
         'views/hotel_room_reg_view.xml',
         'views/hotel_reg_inquiry.xml',
         'views/hotel_room_type_view.xml',
-
+        'report/registration_template.xml',
+        'report/registration_report.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

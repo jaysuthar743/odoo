@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+                id="registration_report"
+                string="Print"
+                model="hotel.room.registration"
+                report_type="qweb-pdf"
+                name="hotel_man.print_reg"
+                file="hotel_man.print_reg">
+        </report>
+    </data>
+</odoo>

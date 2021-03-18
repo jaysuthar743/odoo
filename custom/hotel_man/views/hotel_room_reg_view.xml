@@ -12,7 +12,7 @@
                     <field name="birthdate"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
-                    <field name="reg_state"/>
+                   <field name="reg_state"/>
                 </tree>
             </field>
         </record>
@@ -24,10 +24,11 @@
                 <form string="hotel_room Details">
                     <header>
                         <button name="action_process" type="object" string="Process"
-                                attrs="{'invisible':[('reg_state', '!=', 'draft')]}" class="oe_highlight"/>
+                                 attrs="{'invisible': [('reg_state', 'in', ['process', 'done'])]}" class="oe_highlight"/>
                         <button name="action_done" type="object" string="Done"
-                                attrs="{'invisible':[('reg_state', '!=', 'process')]}" class="oe_highlight"/>
-                        <field name="reg_state" widget="statusbar" statusbar_visible="draft,process,done"/>
+                                 attrs="{'invisible': [('reg_state', 'not in', ['process'])]}" class="oe_highlight"/>
+
+ <field name="reg_state" widget="statusbar" statusbar_visible="draft,process,done,cancel"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -42,7 +43,7 @@
                             <field name="birthdate"/>
                             <field name="start_date"/>
                             <field name="end_date"/>
-                            <field name="room_type_id" />
+                            <field name="room_type_id"/>
                         </group>
                         <notebook>
                             <page string="Documents">
@@ -54,35 +55,19 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Guests">
-                                <field name="guest_id">
-                                    <tree editable="bottom">
-                                        <field name="parent_id"/>
-                                        <field name="name"/>
-                                        <field name="parent_name"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Room">
-                                <field name="room_no"
-                                       context="{'room_type_id': room_type_id, 'start_date': start_date, 'end_date': end_date}">
-                                    <tree editable="bottom">
-                                        <field name="room_no"/>
-                                    </tree>
-                                </field>
+                            <page string="Room and Guest">
+                                <group>
+                                    <field name="room_guest_line_ids">
+                                        <tree editable="bottom">
+                                            <field name="room_id"/>
+                                            <field name="guest_ids" widget="many2many_tags"/>
+                                        </tree>
+                                    </field>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record id='hotel_room_registration_search' model='ir.ui.view'>
-            <field name="name">Room Search</field>
-            <field name="model">hotel.room</field>
-            <field name="arch" type="xml">
-                <search>
-                </search>
             </field>
         </record>
 

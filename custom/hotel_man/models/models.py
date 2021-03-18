@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _, exceptions
-import time
-
-from odoo.osv import expression
+import datetime
 
 
 class HotelRoom(models.Model):
@@ -26,29 +24,12 @@ class HotelRoom(models.Model):
         res = super(HotelRoom, self).create(vals)
         return res
 
-    # @api.model
-    # def name_get(self):
-    #     res = []
-    #     for rec in self:
-    #         res.append((rec.id, '%s - %s' % (rec.room_no, rec.room_type_id.room_type)))
-    #     return res
-
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        context = self.env.context
-        print("\n\n\n\n\n room")
-        print(context)
-        if args is None:
-            args = []
-        else:
-            if context.get('room_type_id'):
-                room_type_ids = self.env['hotel.room']._search(
-                    [('room_type_id', "=", context.get('room_type_id'))], limit=limit, access_rights_uid=name_get_uid)
-                domain = [('id', "in", room_type_ids), ("room_state", "=", "draft")]
-            else:
-                domain = []
-            return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
-        return super(HotelRoom, self)._name_search(name, args=args, operator=operator, limit=limit,
-                                                       name_get_uid=name_get_uid)
+    @api.model
+    def name_get(self):
+        res = []
+        for rec in self:
+            res.append((rec.id, '%s - %s' % (rec.room_no, rec.room_type_id.room_type)))
+        return res
 
 
 class HotelRoomType(models.Model):
@@ -66,6 +47,15 @@ class HotelGuest(models.Model):
     reg_id = fields.Many2one("hotel.room.registration", "Registration")
 
 
+class RoomGuestLine(models.Model):
+    _name = "hotel.room.guest.line"
+    _description = "Hotel Room and Guests"
+
+    reg_id = fields.Many2one("hotel.room.registration", string="Room No.")
+    room_id = fields.Many2one("hotel.room", string="Room No.")
+    guest_ids = fields.Many2many("res.partner", string="Guests")
+
+
 class HotelRegistration(models.Model):
     _name = 'hotel.room.registration'
     _description = 'Hotel Room Registration'
@@ -78,11 +68,24 @@ class HotelRegistration(models.Model):
     start_date = fields.Date("Start Date")
     end_date = fields.Date("End Date")
     document_id = fields.One2many("hotel.document", "reg_id", string="Customer Document")
-    reg_state = fields.Selection([("draft", "Draft"), ("process", "Process"), ("done", "Done")],
+    reg_state = fields.Selection([("draft", "Draft"), ("process", "Process"), ("done", "Done"), ("cancel", "Cancel")],
                                  string="Registration State", default="draft")
-    guest_id = fields.One2many("res.partner", "reg_id", string="Guest")
-    room_no = fields.Many2many("hotel.room", string="Hotel Room No.", domain=[("room_state", "=", "draft")])
+    guest_ids = fields.One2many("res.partner", "reg_id", string="Guest")
+    room_guest_line_ids = fields.One2many("hotel.room.guest.line", "reg_id", string="Hotel Room No.")
     room_type_id = fields.Many2one("hotel.room.type", string="Room Type")
+
+    # cron function
+    def _reg_cancel(self):
+        """
+        Registration data that are in 'process' state are created before 3 days, should ne state='cancel' using cron
+        Returns: state will change from 'process' to 'cancel'
+        """
+        previous_date = datetime.datetime.today() - datetime.timedelta(days=3)  # date before 3 days
+
+        reg_id_to_cancelled = self.env["hotel.room.registration"].search([("reg_state", "=", "process"),
+                                                                             ('create_date', '<=', previous_date)]) # find reg. ids that are created 3 days ago
+        for reg in reg_id_to_cancelled:
+            reg.reg_state = 'cancel'  # change state from 'process' to 'cancel'
 
     def action_process(self):
         for rec in self:
@@ -91,54 +94,23 @@ class HotelRegistration(models.Model):
     def action_done(self):
         for rec in self:
             rec.reg_state = "done"
-            rec.room_no.room_state = 'draft'
+            rec.room_guest_line_ids.room_id.room_state = 'allocated'
 
     @api.model
     def create(self, vals):
-        print(vals)
-        context = self.env.context
-        print("\n\n\n\n\n context")
-        print(context)
-        if context.get("process"):
-            vals['reg_state'] = 'process'
-
-            val = {'room_state': 'allocated'}
-            room_allocate = self.env['hotel.room'].search([('id', '=', vals["room_no"])])  # first search record
-            for room in room_allocate:
-                room.write(val)  # update record
-
         if vals.get('reg_no', _('New')) == _('New'):
             vals['reg_no'] = self.env['ir.sequence'].next_by_code('hotel.room.reg') or _('New')
+
+        val = {'room_state': 'allocated'}
+        # room_to_allocate = []
+        for room in vals["room_guest_line_ids"]:
+            print(room[2].get("room_id"))
+        print(vals["room_guest_line_ids"])
+        # room_allocate = self.env['hotel.room'].search([('id', '=', vals["room_guest_line_ids"][0][2].get("room_id"))])  # first search record
+        # for room in room_allocate:
+        #     room.write(val)  # update record
+
         res = super(HotelRegistration, self).create(vals)
-        return res
-
-    @api.model
-    def default_get(self, fields_list):
-        res = super(HotelRegistration, self).default_get(fields_list)
-        print("\n\n\n\n")
-        print("default")
-
-        # print(self.env.context)
-        room_book_ids = self.env.context.get("room_no") or False
-        # for i in room_book_ids:
-        #     self.room_no.write({
-        #         'room_no': [(4, i)]
-        #     })
-        get_room_ids = self.env["hotel.room"].browse(room_book_ids)
-        # print(get_room_ids)
-
-        for i in room_book_ids:
-            self.room_no.write([(4, i)])
-        # self.room_no = [(6, 0, get_room_ids)]
-        # self.write({
-        #     'room_no': get_room_ids
-        # })
-
-
-        # res.update({
-        #     'start_date': self.env.context.get("start_date") or False,
-        #     'end_date': self.env.context.get("end_date") or False,
-        # })
         return res
 
 
@@ -167,31 +139,21 @@ class HotelRegInquiry(models.Model):
 
     def search_room(self):
         print(self.room_type)
-        # room_types = self.env["hotel.room.type"].search([])
         filtered_rooms = self.env["hotel.room"].search([("room_state", "=", "draft"),
                                                         ("room_type_id", "=", self.room_type.id),
                                                         ("room_size", ">", self.room_size-1)])
-        print(filtered_rooms)
-
-        # room_list = []
-        # for rec in filtered_rooms:
-        #     room_list.append([0, 0, {'room_no': rec.room_no}])
-        # print("\n\n\n\n\n list")
-        # print(room_list)
 
         self.room_ids = [(6, 0, [])]
         self.write({'room_ids': filtered_rooms})
         return
 
     def submit_inquiry(self):
-        res = []
-        for i in self:
-            for j in i.room_ids:
-                if j.room_booked == True:
-                    res.append(j.id)
+        selected_res = []
+        for room in self.room_ids:
+            for is_selected in room:
+                if is_selected:
+                    selected_res.append({"room_id": is_selected.id})
 
-        print("\n\n\n\n Room booked")
-        print(self.room_type)
         return {
             'name': "Hotel Room Registration",
             'type': 'ir.actions.act_window',
@@ -200,32 +162,7 @@ class HotelRegInquiry(models.Model):
             'res_model': 'hotel.room.registration',
             'view_id': self.env.ref('hotel_man.hotel_room_registration_form').id,
             'context': {'process': 1,
-                        'room_no': res}
+                        'default_room_guest_line_ids': selected_res
+                        }
         }
 
-
-    # def search_available_room(self):
-    #     inquiry_room_domain = self.env["hotel.room"].search([("room_type_id", "=", self.room_type.id), ("room_size", ">",self.room_size-1)])
-    #     inquiry_reg_domain = self.env["hotel.room.registration"].search([('start_date', '<=', self.start_date),
-    #                                                                      ('end_date', '>=', self.end_date)])
-    #     print("\n\n\n\n\n\n\n\n search_available_room")
-    #     print(self.env.context)
-    #     if inquiry_room_domain:
-    #         return {
-    #             'name': "Hotel Room Registration",
-    #             'type': 'ir.actions.act_window',
-    #             'view_type': 'form',
-    #             'view_mode': 'form',
-    #             'res_model': 'hotel.room.registration',
-    #             'view_id': self.env.ref('hotel_man.hotel_room_registration_form').id,
-    #             'target': 'new',
-    #             'context': {'process': 1,
-    #                         'room_size': self.env.context.get("room_size"),
-    #                         'start_date': self.start_date,
-    #                         'end_date': self.end_date,
-    #                         'room_type_id:': self.room_type
-    #                         }
-    #         }
-    #     else:
-    #         raise exceptions.ValidationError(_('Sorry! No Room Available.'))
-    #
