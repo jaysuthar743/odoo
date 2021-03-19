@@ -76,16 +76,27 @@ class HotelRegistration(models.Model):
 
     # cron function
     def _reg_cancel(self):
-        """
-        Registration data that are in 'process' state are created before 3 days, should ne state='cancel' using cron
-        Returns: state will change from 'process' to 'cancel'
-        """
+        """ Registration data that are in 'process' state are created before 3 days, should be state='cancel' using cron
+        Returns: state will change from 'process' to 'cancel' """
+
         previous_date = datetime.datetime.today() - datetime.timedelta(days=3)  # date before 3 days
 
-        reg_id_to_cancelled = self.env["hotel.room.registration"].search([("reg_state", "=", "process"),
+        reg_ids_to_cancel = self.env["hotel.room.registration"].search([("reg_state", "=", "process"),
                                                                              ('create_date', '<=', previous_date)]) # find reg. ids that are created 3 days ago
-        for reg in reg_id_to_cancelled:
+        for reg in reg_ids_to_cancel:
             reg.reg_state = 'cancel'  # change state from 'process' to 'cancel'
+
+    # cron function
+    def _room_draft(self):
+        """
+        cron function to change room state from 'allocated' to 'draft' when registration's end date is matched
+        Returns
+        -------
+
+        """
+        room_ids_to_draft = self.env["hotel.room.registration"].search([('end_date', '=', ((datetime.date.today()).strftime('%Y-%m-%d')))])
+        for room in room_ids_to_draft:
+            room.room_guest_line_ids.room_id.room_state = 'draft'
 
     def action_process(self):
         for rec in self:
@@ -100,16 +111,6 @@ class HotelRegistration(models.Model):
     def create(self, vals):
         if vals.get('reg_no', _('New')) == _('New'):
             vals['reg_no'] = self.env['ir.sequence'].next_by_code('hotel.room.reg') or _('New')
-
-        val = {'room_state': 'allocated'}
-        # room_to_allocate = []
-        for room in vals["room_guest_line_ids"]:
-            print(room[2].get("room_id"))
-        print(vals["room_guest_line_ids"])
-        # room_allocate = self.env['hotel.room'].search([('id', '=', vals["room_guest_line_ids"][0][2].get("room_id"))])  # first search record
-        # for room in room_allocate:
-        #     room.write(val)  # update record
-
         res = super(HotelRegistration, self).create(vals)
         return res
 
@@ -138,7 +139,6 @@ class HotelRegInquiry(models.Model):
     room_ids = fields.One2many("hotel.room", "inquiry_ids", string="Room No.", default=False)
 
     def search_room(self):
-        print(self.room_type)
         filtered_rooms = self.env["hotel.room"].search([("room_state", "=", "draft"),
                                                         ("room_type_id", "=", self.room_type.id),
                                                         ("room_size", ">", self.room_size-1)])
@@ -148,10 +148,12 @@ class HotelRegInquiry(models.Model):
         return
 
     def submit_inquiry(self):
+        """ list of ids that are selected for registration."""
+
         selected_res = []
         for room in self.room_ids:
             for is_selected in room:
-                if is_selected:
+                if is_selected.room_booked:
                     selected_res.append({"room_id": is_selected.id})
 
         return {

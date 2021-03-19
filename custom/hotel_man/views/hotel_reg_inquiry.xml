@@ -1,14 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
-    <!--    <record id='hotel_reg_inquiry_tree_view' model='ir.ui.view'>-->
-    <!--        <field name="name">Hotel Registration Inquiry</field>-->
-    <!--        <field name="model">hotel.registration.inquiry</field>-->
-    <!--        <field name="arch" type="xml">-->
-    <!--            <tree string="Room Inquiry Details" decoration-bf="True" decoration-it="True" class="align-items-center">-->
-    <!--                <field name="customer_id"/>-->
-    <!--            </tree>-->
-    <!--        </field>-->
-    <!--    </record>-->
+    <record id='hotel_reg_inquiry_tree_view' model='ir.ui.view'>
+        <field name="name">Hotel Registration Inquiry</field>
+        <field name="model">hotel.registration.inquiry</field>
+        <field name="arch" type="xml">
+            <tree string="Room Inquiry Details">
+                <field name="customer_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="room_type"/>
+                <field name="room_size"/>
+            </tree>
+        </field>
+    </record>
 
     <record id='hotel_reg_inquiry_form_view' model='ir.ui.view'>
         <field name="name">Hotel Registration Inquiry</field>
@@ -35,8 +39,9 @@
                     </group>
                     <notebook>
                         <group string="Room">
-                            <field name="room_ids" widget="many2many" options="{'no_create': True, 'no_create_edit': True}">
-                                <tree  options="{'no_create': True, 'no_create_edit': True}">
+                            <field name="room_ids" widget="many2many"
+                                   options="{'no_create': True, 'no_create_edit': True}">
+                                <tree options="{'no_create': True, 'no_create_edit': True}">
                                     <field name="room_no"/>
                                     <field name="room_booked" widget="boolean_toggle"/>
                                 </tree>
@@ -51,13 +56,14 @@
     <record model="ir.actions.act_window" id="hotel_reg_inquiry_action">
         <field name="name">Hotel Management</field>
         <field name="res_model">hotel.registration.inquiry</field>
-        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Enter Details of Reg. Inquiry</p>
         </field>
     </record>
 
-    <menuitem id="hotel_reg_inquiry_action_for_menu" name="Inquiry" parent="hotel_reg_menu" action="hotel_reg_inquiry_action"
+    <menuitem id="hotel_reg_inquiry_action_for_menu" name="Inquiry" parent="hotel_reg_menu"
+              action="hotel_reg_inquiry_action"
               sequence="-10"/>
 
 </odoo>
