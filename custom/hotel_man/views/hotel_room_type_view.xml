@@ -11,7 +11,6 @@
             </field>
         </record>
 
-
         <record id='hotel_room_type_form' model='ir.ui.view'>
             <field name="name">hotel_room type</field>
             <field name="model">hotel.room.type</field>

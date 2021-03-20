@@ -12,7 +12,8 @@
                     <field name="birthdate"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
-                   <field name="reg_state"/>
+                    <field name="reg_state"/>
+                    <field name="total_price"/>
                 </tree>
             </field>
         </record>
@@ -24,11 +25,11 @@
                 <form string="hotel_room Details">
                     <header>
                         <button name="action_process" type="object" string="Process"
-                                 attrs="{'invisible': [('reg_state', 'in', ['process', 'done'])]}" class="oe_highlight"/>
+                                attrs="{'invisible': [('reg_state', 'in', ['process', 'done'])]}" class="oe_highlight"/>
                         <button name="action_done" type="object" string="Done"
-                                 attrs="{'invisible': [('reg_state', 'not in', ['process'])]}" class="oe_highlight"/>
-
- <field name="reg_state" widget="statusbar" statusbar_visible="draft,process,done,cancel"/>
+                                attrs="{'invisible': [('reg_state', 'not in', ['process'])]}" class="oe_highlight"/>
+                        <button name="send_mail" type="object" string="Send Email" class="oe_highlight"/>
+                        <field name="reg_state" widget="statusbar" statusbar_visible="draft,process,done,cancel"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -44,6 +45,7 @@
                             <field name="start_date"/>
                             <field name="end_date"/>
                             <field name="room_type_id"/>
+                            <field name="total_price"/>
                         </group>
                         <notebook>
                             <page string="Documents">
@@ -56,14 +58,13 @@
                                 </field>
                             </page>
                             <page string="Room and Guest">
-                                <group>
-                                    <field name="room_guest_line_ids">
-                                        <tree editable="bottom">
-                                            <field name="room_id"/>
-                                            <field name="guest_ids" widget="many2many_tags"/>
-                                        </tree>
-                                    </field>
-                                </group>
+                                <field name="room_guest_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="room_id"/>
+                                        <field name="guest_ids" widget="many2many_tags"/>
+                                        <field name="room_price" widget="monetary"/>
+                                    </tree>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>

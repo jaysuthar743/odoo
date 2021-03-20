@@ -10,6 +10,7 @@
                 <field name="end_date"/>
                 <field name="room_type"/>
                 <field name="room_size"/>
+                <field name="total_price"/>
             </tree>
         </field>
     </record>
@@ -26,7 +27,8 @@
                                       'default_customer_id': customer_id,
                                       'default_start_date': start_date,
                                       'default_end_date': end_date,
-                                      'default_room_size': room_size
+                                      'default_room_size': room_size,
+                                      'default_total_price': total_price
                                      }"/>
                 </header>
                 <sheet>
@@ -36,6 +38,7 @@
                         <field name="end_date"/>
                         <field name="room_type"/>
                         <field name="room_size"/>
+                        <field name="total_price"/>
                     </group>
                     <notebook>
                         <group string="Room">
@@ -44,6 +47,7 @@
                                 <tree options="{'no_create': True, 'no_create_edit': True}">
                                     <field name="room_no"/>
                                     <field name="room_booked" widget="boolean_toggle"/>
+                                    <field name="room_price" widget="monetary"/>
                                 </tree>
                             </field>
                         </group>

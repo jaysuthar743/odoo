@@ -12,6 +12,7 @@
                     <field name="room_state"/>
                     <field name="room_booked"/>
                     <field name="room_size"/>
+                    <field name="room_price"/>
                 </tree>
             </field>
         </record>
@@ -35,6 +36,7 @@
                             <field name="room_type_id"/>
                             <field name="room_floor"/>
                             <field name="room_size"/>
+                            <field name="room_price"/>
                         </group>
                     </sheet>
                 </form>
