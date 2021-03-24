@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, _, exceptions
+import xlrd
+import base64
 import datetime
+import io
+import time
+from odoo import models, fields, api, _
+
+try:
+    from odoo.tools.misc import xlsxwriter
+except ImportError:
+    import xlsxwriter
 
 
 class HotelRoom(models.Model):
@@ -18,6 +27,28 @@ class HotelRoom(models.Model):
     inquiry_ids = fields.Many2one("hotel.registration.inquiry", string="Inquiry")
     room_booked = fields.Boolean(string="Room Book")
     room_price = fields.Integer("Room Price")
+    reg_count = fields.Integer(string="Registration Count", compute='count_registrations')
+
+    def count_registrations(self):
+        self.reg_count = self.env['hotel.room.registration'].search_count([('room_guest_line_ids.room_id', '=', self.id)])
+
+    def get_registrations(self):
+        """
+            Open Registrations Tree view if there is more than 1 room allocated to that reg.,
+            Otherwise open form view of particular reg. form
+        """
+        self.ensure_one()
+        reg_ids = self.env["hotel.room.registration"].search([('room_guest_line_ids.room_id', '=', self.id)])
+        action = self.env["ir.actions.actions"]._for_xml_id("hotel_man.hotel_room_registration_action")
+        if self.reg_count > 1:
+            action['domain'] = [('room_guest_line_ids.room_id', '=', self.id)]
+        elif self.reg_count == 1:
+            form_view = [(self.env.ref('hotel_man.hotel_room_registration_form').id, 'form')]
+            action['views'] = form_view
+            action['res_id'] = reg_ids.id
+        else:
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
 
     @api.model
     def create(self, vals):
@@ -88,12 +119,11 @@ class HotelRegistration(models.Model):
         return ",".join(recipients)
 
     def send_mail(self):
-        ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
+        '''  '''
 
         # #send email to current guest
         # mail_template = self.env.ref('hotel_man.reg_email_template')
         # mail_template.send_mail(self.id, force_send=True)
-
         self.ensure_one()
         ir_model_data = self.env['ir.model.data']
 
@@ -107,29 +137,21 @@ class HotelRegistration(models.Model):
         except ValueError:
             compose_form_id = False
 
-        recipients = list(r['email'] for r in self.room_guest_line_ids.guest_ids)
-        print(recipients)
-        print("\n\n\n\n reccc")
-        # for guest in self.room_guest_line_ids.guest_ids:
-        #     recipients.add(guest.email)
-
+        # recipients = list(r['email'] for r in self.room_guest_line_ids.guest_ids)
         # print(recipients)
-        # print(self.ids)
+
         ctx = {
             'default_model': 'hotel.room.registration',
             'default_res_id': self.ids[0],
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
-            # 'default_partner_ids': list(recipients),
-            # 'email': list(recipients),
-            # 'default_email_to': ','.join(recipients),
-            'default_email_to': 'jay@gmail.com',
             'default_composition_mode': 'comment',
         }
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
+            'view_type': 'form',
             'res_model': 'mail.compose.message',
             'views': [(compose_form_id, 'form')],
             'view_id': compose_form_id,
@@ -146,7 +168,7 @@ class HotelRegistration(models.Model):
 
         reg_ids_to_cancel = self.env["hotel.room.registration"].search([("reg_state", "=", "process"),
                                                                         ('create_date', '<=',
-                                                                         previous_date)])  # find reg. ids that are created 3 days ago
+                                                                         previous_date)])  # find reg. ids that are created 3 days ago and state is process
         for reg in reg_ids_to_cancel:
             reg.reg_state = 'cancel'  # change state from 'process' to 'cancel'
 
@@ -154,9 +176,6 @@ class HotelRegistration(models.Model):
     def _room_draft(self):
         """
         cron function to change room state from 'allocated' to 'draft' when registration's end date is matched
-        Returns
-        -------
-
         """
         room_ids_to_draft = self.env["hotel.room.registration"].search(
             [('end_date', '=', ((datetime.date.today()).strftime('%Y-%m-%d')))])
@@ -215,7 +234,6 @@ class HotelRegInquiry(models.Model):
         })
 
     def search_room(self):
-        self.calculate_price()
         filtered_rooms = self.env["hotel.room"].search([("room_state", "=", "draft"),
                                                         ("room_type_id", "=", self.room_type.id),
                                                         ("room_size", ">", self.room_size - 1)])
@@ -247,7 +265,8 @@ class ReportHotelManPrintReg(models.AbstractModel):
     _name = "report.hotel_man.print_reg"
     _description = "model for Abstract Class"
 
-    def _get_name(self, doc):
+    @staticmethod
+    def _get_name(doc):
         return "jay"
 
     @api.model
@@ -259,3 +278,102 @@ class ReportHotelManPrintReg(models.AbstractModel):
             'docs': doc,
             'get_name': self._get_name
         }
+
+
+class ReportHotelManPrintRegExcel(models.TransientModel):
+    _name = "hotel.room.registration.xlsx"
+    _description = "Model for excel report"
+
+    start_date = fields.Date(string="Start Date", default=time.strftime('%Y-%m-01'), required=True)
+    end_date = fields.Date(string="End Date", default=datetime.datetime.now(), required=True)
+
+    def generate_excel_report(self):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        format0 = workbook.add_format({'font_size': 14, 'align': 'center', 'bold': True})
+        format1 = workbook.add_format({'font_size': 12, 'align': 'center'})
+        sheet = workbook.add_worksheet('Customer Registration Details')
+        sheet.write('A1', 'Registration Id', format0)
+        sheet.write('B1', 'Start Date', format0)
+        sheet.write('C1', 'End Date', format0)
+        sheet.write('D1', 'Room No.', format0)
+        sheet.write('E1', 'Guests', format0)
+        sheet.write('F1', 'Bill Amount', format0)
+        sheet.write('G1', 'Room Type', format0)
+        sheet.set_column('A:D', 30)
+        sheet.set_column('E:E', 50)
+        sheet.set_column('F:G', 30)
+        res = self.env["hotel.room.registration"].search([("start_date", ">=", self.start_date),
+                                                          ("start_date", "<=", self.end_date)])
+        data = []
+        for record in res:
+            rooms, guests, room_type = [], [], []
+            for room in record.room_guest_line_ids.room_id:
+                rooms.append(room.room_no)
+
+            for guest in record.room_guest_line_ids.guest_ids:
+                guests.append(guest.name)
+
+            for rt in record.room_guest_line_ids.room_id:
+                room_type.append(rt.room_type_id.room_type)
+
+            vals = {
+                'start_date': record.start_date,
+                'end_date': record.end_date,
+                'reg_no': record.reg_no,
+                'room_no': rooms,
+                'guests': guests,
+                'total': record.total_price,
+                'room_type': room_type
+            }
+            data.append(vals)
+        row = 2
+        col = 0
+        for rec in data:
+            sheet.write(row, col, rec.get('reg_no'), format1)
+            sheet.write(row, col + 1, rec.get('start_date').strftime('%d/%m/%Y'), format1)
+            sheet.write(row, col + 2, rec.get('end_date').strftime('%d/%m/%Y'), format1)
+            sheet.write(row, col + 3, ", ".join(rec.get("room_no")), format1)
+            sheet.write(row, col + 4, ", ".join(rec.get("guests")), format1)
+            sheet.write(row, col + 5, rec.get("total"), format1)
+            sheet.write(row, col + 6, ", ".join(rec.get("room_type")), format1)
+            row += 1
+        if data:
+            sheet.write(row + 1, col + 5, '{=SUM(F3:F' + str(row) + ')}', format0)
+        workbook.close()
+        output.seek(0)
+        attach = self.env['ir.attachment'].create({'name': 'Hotel_Registrations.xlsx',
+                                                   'datas': base64.b64encode(output.read())})
+        return {
+            'type': 'ir.actions.act_url',
+            'url': str(self.env['ir.config_parameter'].get_param('web.base.url')) + str(
+                '/web/content/' + str(attach.id) + '?download=True'),
+            'target': self
+        }
+
+
+class RoomImport(models.TransientModel):
+    _name = "hotel.room.import"
+    _description = "Model to Import Room From Excel File"
+
+    room_details_file = fields.Binary(string="Upload Excel File")
+
+    def create_room(self):
+        print(self.room_details_file)
+        wb = xlrd.open_workbook(file_contents=base64.decodebytes(self.room_details_file)) # Uploaded File
+        for sheet in wb.sheets():
+            for row in range(sheet.nrows):
+                room_type_id = sheet.cell(row, 0).value
+                room_floor = sheet.cell(row, 1).value
+                room_size = sheet.cell(row, 2).value
+                room_state = sheet.cell(row, 3).value
+                room_price = sheet.cell(row, 4).value
+
+                self.env['hotel.room'].create({
+                    'room_no': 'New',
+                    'room_type_id': int(room_type_id),
+                    'room_floor': str(int(room_floor)),
+                    'room_size': int(room_size),
+                    'room_state': str(room_state),
+                    'room_price': int(room_price)
+                })

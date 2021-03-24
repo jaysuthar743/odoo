@@ -5,3 +5,5 @@ access_hotel_room_registration,access_hotel_room_registration,hotel_man.model_ho
 access_hotel_document,access_hotel_document,hotel_man.model_hotel_document,base.group_user,1,1,1,1
 access_hotel_registration_inquiry,access_hotel_registration_inquiry,hotel_man.model_hotel_registration_inquiry,base.group_user,1,1,1,1
 access_hotel_room_guest_line,access_hotel_room_guest_line,hotel_man.model_hotel_room_guest_line,base.group_user,1,1,1,1
+access_hotel.room_registration_xlsx,access_hotel_room_registration_xlsx,hotel_man.model_hotel_room_registration_xlsx,base.group_user,1,1,1,1
+access_hotel.hotel_room_import,access_hotel_room_import,hotel_man.model_hotel_room_import,base.group_user,1,1,1,1

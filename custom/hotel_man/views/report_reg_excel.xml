@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="xls_report_list_view_form" model="ir.ui.view">
+        <field name="name">xls.report.list.view.form</field>
+        <field name="model">hotel.room.registration.xlsx</field>
+        <field name="arch" type="xml">
+            <form string="Find Registrations">
+                <group class="oe_title">
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </group>
+                <footer>
+                    <button name="generate_excel_report" string="Submit" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_wizard" model="ir.actions.act_window">
+        <field name="name">Find Registrations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hotel.room.registration.xlsx</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="xls_report_list_view_form"/>
+    </record>
+
+    <menuitem id="hotel_reg_excel_report" name="Report" parent="hotel_root" action="action_view_wizard"/>
+
+</odoo>

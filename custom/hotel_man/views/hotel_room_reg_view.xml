@@ -31,7 +31,10 @@
                         <button name="send_mail" type="object" string="Send Email" class="oe_highlight"/>
                         <field name="reg_state" widget="statusbar" statusbar_visible="draft,process,done,cancel"/>
                     </header>
+
+
                     <sheet>
+
                         <div class="oe_title">
                             <label for="reg_no" class="doe_edit_only" string="Registration No."/>
                             <h1>

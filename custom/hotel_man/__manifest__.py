@@ -32,7 +32,9 @@
         'views/hotel_room_type_view.xml',
         'report/registration_template.xml',
         'report/registration_report.xml',
-        'data/mail_template.xml'
+        'data/mail_template.xml',
+        'views/report_reg_excel.xml',
+        'views/hotel_room_import.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

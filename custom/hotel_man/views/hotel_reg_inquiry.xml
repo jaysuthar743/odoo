@@ -10,7 +10,6 @@
                 <field name="end_date"/>
                 <field name="room_type"/>
                 <field name="room_size"/>
-                <field name="total_price"/>
             </tree>
         </field>
     </record>

@@ -10,16 +10,6 @@
             <field name="report_file">hotel_man.print_reg</field>
         </record>
 
-<!--        <record model="ir.actions.server" id="x_cust_act">-->
-<!--            <field name="name">myAction</field>-->
-<!--            <field name="model_id" ref="hotel_man.model_hotel_room_registration"/>-->
-<!--            <field name="sequence">1</field>-->
-<!--            <field name="type">ir.actions.server</field>-->
-<!--            <field name="state">code</field>-->
-<!--            <field name="code">-->
-<!--                if records:-->
-<!--                    action = records.update_state()-->
-<!--            </field>-->
-<!--        </record>-->
+
     </data>
 </odoo>

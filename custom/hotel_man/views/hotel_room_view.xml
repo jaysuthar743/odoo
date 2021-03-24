@@ -17,15 +17,18 @@
             </field>
         </record>
 
-
         <record id='hotel_room_form' model='ir.ui.view'>
-            <field name="name">hotel_room </field>
+            <field name="name">hotel_room</field>
             <field name="model">hotel.room</field>
             <field name="arch" type="xml">
                 <form string="hotel_room Details">
-                    <header>
-                    </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="get_registrations" type="object"
+                                    icon="fa-bars">
+                                <field name="reg_count" widget="statinfo" string="Registrations"/>
+                            </button>
+                        </div>
                         <div class="oe_title">
                             <label for="room_no" class="doe_edit_only" string="Room No."/>
                             <h1>
@@ -42,7 +45,6 @@
                 </form>
             </field>
         </record>
-
 
         <record model="ir.actions.act_window" id="hotel_room_action">
             <field name="name">Hotel Management</field>
