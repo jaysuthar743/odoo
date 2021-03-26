@@ -33,7 +33,8 @@
         'views/custom_popup_message.xml',
         'data/hotel.room.csv',
         'views/sales_order_import_product.xml',
-        'views/product_upload_wizard_view.xml'
+        'views/product_upload_wizard_view.xml',
+        # 'security/hotel_access_rights.xml'
     ],
     'demo': [
         'demo/demo.xml',

@@ -1,0 +1,46 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="25"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='show_margins']" position="after">
+                    <div class="col-12 col-lg-6 o_setting_box" title="">
+                        <div class="o_setting_right_pane">
+                            <label for="sales_limit"/>
+                            <div class="text-muted">
+                                Sales Limit:
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="sales_limit"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sales_manager_field" model="res.groups">
+            <field name="name">Sales Manager</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <record model="ir.ui.view" id="product_brand_extend">
+            <field name="name">Product Brand</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="statusbar_visible">draft,sent,to_approve,sale</attribute>
+                </xpath>
+                 <xpath expr="//button[@name='action_cancel']" position="before">
+                   <button name="action_to_approve" string="To Approve" type="object"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

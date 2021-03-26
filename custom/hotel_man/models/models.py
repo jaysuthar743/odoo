@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import xlrd
 import base64
 import datetime
 import io
 import time
+
+import xlrd
+
 from odoo import models, fields, api, _
 
 try:
@@ -30,7 +32,8 @@ class HotelRoom(models.Model):
     reg_count = fields.Integer(string="Registration Count", compute='count_registrations')
 
     def count_registrations(self):
-        self.reg_count = self.env['hotel.room.registration'].search_count([('room_guest_line_ids.room_id', '=', self.id)])
+        self.reg_count = self.env['hotel.room.registration'].search_count(
+            [('room_guest_line_ids.room_id', '=', self.id)])
 
     def get_registrations(self):
         """
@@ -405,12 +408,17 @@ class ProductUploadWizard(models.TransientModel):
             for row in range(1, sheet.nrows):
                 product_name = sheet.cell(row, 0).value
                 product_description = sheet.cell(row, 1).value
-                prods = self.env['product.product'].create({
-                     'name': str(product_name),
-                     'description': str(product_description)
-                 }).id
+                existing_product = self.env["product.product"].search([("name", "=", product_name)], limit=1)
+                if len(existing_product.ids) >= 1:
+                    prods = existing_product.id
+                else:
+                    prods = self.env['product.product'].create({
+                        'name': str(product_name),
+                        'description': str(product_description)
+                    }).id
                 self.env['sale.order.line'].create({'order_id': order_id,
                                                     'product_id': prods,
+                                                    'name': str(product_description),
                                                     'product_uom': 1})
 
 
@@ -428,5 +436,3 @@ class SalesOrderImportProduct(models.AbstractModel):
             'view_id': self.env.ref('hotel_man.product_upload_wizard_view_form').id,
             'context': {'sale_id': self.id}
         }
-
-
