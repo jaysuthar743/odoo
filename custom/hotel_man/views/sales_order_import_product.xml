@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="product_brand_extend">
+            <field name="name">Product Brand</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="order_line" position="before">
+                   <button class="oe_highlight" name="invoke_product_wizard" string="Upload Your File" type="object" widget="binary"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

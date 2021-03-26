@@ -1,0 +1,2 @@
+id,room_no,room_type_id,room_floor,room_size,room_state,room_price
+50,New,"Single",2,10,"draft",19500

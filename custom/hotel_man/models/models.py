@@ -112,14 +112,12 @@ class HotelRegistration(models.Model):
 
     @api.model
     def get_email_to(self):
-        print("\n\n\n\n\n called")
         recipients = list(r['email'] for r in self.room_guest_line_ids.guest_ids)
         # recipients = "jay@gmail.com, "vijay@gmail.com"]
-        print(recipients)
         return ",".join(recipients)
 
     def send_mail(self):
-        '''  '''
+        '''  outgoing mail server configured to send mail '''
 
         # #send email to current guest
         # mail_template = self.env.ref('hotel_man.reg_email_template')
@@ -359,10 +357,9 @@ class RoomImport(models.TransientModel):
     room_details_file = fields.Binary(string="Upload Excel File")
 
     def create_room(self):
-        print(self.room_details_file)
-        wb = xlrd.open_workbook(file_contents=base64.decodebytes(self.room_details_file)) # Uploaded File
+        wb = xlrd.open_workbook(file_contents=base64.decodebytes(self.room_details_file))  # Uploaded File
         for sheet in wb.sheets():
-            for row in range(sheet.nrows):
+            for row in range(1, sheet.nrows):
                 room_type_id = sheet.cell(row, 0).value
                 room_floor = sheet.cell(row, 1).value
                 room_size = sheet.cell(row, 2).value
@@ -377,3 +374,59 @@ class RoomImport(models.TransientModel):
                     'room_state': str(room_state),
                     'room_price': int(room_price)
                 })
+
+        return {
+            'name': 'Message',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'custom.pop.message',
+            'target': 'new',
+            'view_id': self.env.ref('hotel_man.custom_pop_message_wizard_view_form').id,
+            'context': {'default_name': "Successfully Inserted."}
+        }
+
+
+class CustomPopMessage(models.TransientModel):
+    _name = "custom.pop.message"
+
+    name = fields.Char(string='Message')
+
+
+class ProductUploadWizard(models.TransientModel):
+    _name = "product.upload.wizard"
+
+    product_import_file = fields.Binary(string="Upload Excel File")
+
+    def create_products(self):
+        wb = xlrd.open_workbook(file_contents=base64.decodebytes(self.product_import_file))  # Uploaded File
+        order_id = self.env.context.get("sale_id")
+        for sheet in wb.sheets():
+            for row in range(1, sheet.nrows):
+                product_name = sheet.cell(row, 0).value
+                product_description = sheet.cell(row, 1).value
+                prods = self.env['product.product'].create({
+                     'name': str(product_name),
+                     'description': str(product_description)
+                 }).id
+                self.env['sale.order.line'].create({'order_id': order_id,
+                                                    'product_id': prods,
+                                                    'product_uom': 1})
+
+
+class SalesOrderImportProduct(models.AbstractModel):
+    _inherit = "sale.order"
+
+    def invoke_product_wizard(self):
+        return {
+            'name': 'Message',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'product.upload.wizard',
+            'target': 'new',
+            'view_id': self.env.ref('hotel_man.product_upload_wizard_view_form').id,
+            'context': {'sale_id': self.id}
+        }
+
+

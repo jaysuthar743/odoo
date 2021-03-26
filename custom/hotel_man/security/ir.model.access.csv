@@ -7,3 +7,5 @@ access_hotel_registration_inquiry,access_hotel_registration_inquiry,hotel_man.mo
 access_hotel_room_guest_line,access_hotel_room_guest_line,hotel_man.model_hotel_room_guest_line,base.group_user,1,1,1,1
 access_hotel.room_registration_xlsx,access_hotel_room_registration_xlsx,hotel_man.model_hotel_room_registration_xlsx,base.group_user,1,1,1,1
 access_hotel.hotel_room_import,access_hotel_room_import,hotel_man.model_hotel_room_import,base.group_user,1,1,1,1
+access_hotel.custom_pop_message,access_custom_pop_message,hotel_man.model_custom_pop_message,base.group_user,1,1,1,1
+access_hotel.product_upload_wizard,access_product_upload_wizard,hotel_man.model_product_upload_wizard,base.group_user,1,1,1,1
