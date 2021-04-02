@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="sale_global_discount">
+        <field name="name">Global Discount</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_term_id" position="after">
+                <field name="discount_type"/>
+                <field name="global_discount"/>
+            </field>
+            <xpath expr="//field[@name='amount_tax']" position="after">
+                <field name="global_discount" widget="monetary" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="print_reg" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@name='so_total_summary']//table[@class='table table-sm']//tr[@class='border-black o_subtotal']" position="after">
+            <tr class="border-black o_total">
+                <td name="td_amount_total_label">
+                    <strong>Discount</strong>
+                </td>
+                <td name="td_amount_total" class="text-right">
+                    <span t-field="doc.global_discount"/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+</odoo>

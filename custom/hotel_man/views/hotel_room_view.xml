@@ -25,7 +25,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="get_registrations" type="object"
-                                    icon="fa-bars">
+                                    icon="fa-bars" attrs="{'invisible': [('reg_count', '&lt;', 1)]}">
                                 <field name="reg_count" widget="statinfo" string="Registrations"/>
                             </button>
                         </div>

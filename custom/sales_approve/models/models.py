@@ -11,7 +11,7 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
-        res['sales_limit'] = (self.env['ir.config_parameter'].sudo().get_param('sales_approve.sales_limit',
+        res['sales_limit'] = (self.env['ir.config_parameter'].sudo().get_param('sales_approve.sale_limit',
                                                                                default=0))
         return res
 
