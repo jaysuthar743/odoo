@@ -23,16 +23,5 @@ class SalesGlobalDiscount(models.Model):
         if self.discount_type == 'amount':
             self.amount_total = self.amount_total - self.global_discount
         elif self.discount_type == 'percentage':
-            # self.global_discount = self.amount_total * self.global_discount / 100
             self.amount_total = self.amount_total - (self.amount_total * self.global_discount / 100)
         return res
-
-    @api.model
-    def create(self, vals):
-        print(vals)
-        print("\n\n\n\n\n")
-        vals['amount_total'] = self.amount_total - (self.amount_total * self.global_discount / 100)
-        vals['global_discount'] = self.global_discount
-        res = super(SalesGlobalDiscount, self).create(vals)
-        return res
-

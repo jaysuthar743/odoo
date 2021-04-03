@@ -10,16 +10,24 @@
                 <field name="global_discount"/>
             </field>
             <xpath expr="//field[@name='amount_tax']" position="after">
-                <field name="global_discount" widget="monetary" readonly="1"/>
+                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                    <label for="global_discount" string="Global Discount (%)" nolabel="1"
+                           attrs="{'invisible': [('discount_type', '=', 'amount')]}"/>
+                    <label for="global_discount" string="Global Discount" nolabel="1"
+                           attrs="{'invisible': [('discount_type', '=', 'percentage')]}"/>
+                </div>
+                <field name="global_discount" nolabel="1" widget="monetary" readonly="1" force_save="1"/>
             </xpath>
         </field>
     </record>
 
-    <template id="print_reg" inherit_id="sale.report_saleorder_document">
-        <xpath expr="//div[@name='so_total_summary']//table[@class='table table-sm']//tr[@class='border-black o_subtotal']" position="after">
+    <template id="sale_global_discount_template" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@name='so_total_summary']//table[@class='table table-sm']//tr[@class='border-black o_total']"
+               position="before">
             <tr class="border-black o_total">
                 <td name="td_amount_total_label">
-                    <strong>Discount</strong>
+                    <strong t-if="doc.discount_type in ['amount']" >Global Discount</strong>
+                    <strong t-if="doc.discount_type in ['percentage']">Global Discount (%)</strong>
                 </td>
                 <td name="td_amount_total" class="text-right">
                     <span t-field="doc.global_discount"/>
