@@ -6,11 +6,11 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="payment_term_id" position="after">
-                <field name="discount_type"/>
+                <field name="discount_type" widget="selection_badge"/>
                 <field name="global_discount"/>
             </field>
             <xpath expr="//field[@name='amount_tax']" position="after">
-                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                <div class="oe_inline o_td_label">
                     <label for="global_discount" string="Global Discount (%)" nolabel="1"
                            attrs="{'invisible': [('discount_type', '=', 'amount')]}"/>
                     <label for="global_discount" string="Global Discount" nolabel="1"
@@ -26,7 +26,7 @@
                position="before">
             <tr class="border-black o_total">
                 <td name="td_amount_total_label">
-                    <strong t-if="doc.discount_type in ['amount']" >Global Discount</strong>
+                    <strong t-if="doc.discount_type in ['amount']">Global Discount</strong>
                     <strong t-if="doc.discount_type in ['percentage']">Global Discount (%)</strong>
                 </td>
                 <td name="td_amount_total" class="text-right">
