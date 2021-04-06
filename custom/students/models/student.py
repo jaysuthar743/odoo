@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 class Student(models.Model):
 	_name = 'student'
-	_inherit = ['mail.thread','mail.activity.mixin']
+	_inherit = ['mail.thread', 'mail.activity.mixin']
 	_description = 'Basic Student Model'
 
 	@api.depends('dob')

@@ -78,7 +78,7 @@
         <field name="name">Hospital Patient </field>
         <field name="res_model">hospital.patient</field>
         <field name="view_mode">tree,form,search</field>
-        <field name="context">{"search_default_state_Sdone": 1}</field>
+        <field name="context">{"search_default_state_done": 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Enter Details of Patient</p>
         </field>

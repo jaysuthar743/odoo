@@ -75,10 +75,20 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_hotel_reg_pivot">
+            <field name="name">Hotel Registration Pivot View</field>
+            <field name="model">hotel.room.registration</field>
+            <field name="arch" type="xml">
+                <pivot string="Registration" sample="1">
+                    <field name="room_type_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="hotel_room_registration_action">
             <field name="name">Hotel Management</field>
             <field name="res_model">hotel.room.registration</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form,search,pivot</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Enter Details of Room</p>
             </field>

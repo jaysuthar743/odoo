@@ -14,7 +14,11 @@ common_proxy = xmlrpc.client.ServerProxy(url+'common')
 uid = common_proxy.login(DB, USER, PASS)
 print("Logged in as %s (uid:%d)" % (USER, uid))
 
-print(object_proxy.execute_kw(DB, uid, PASS, 'res.partner', 'search', [[['name', 'ilike', "Deco"]]]))
+id = object_proxy.execute_kw(DB, uid, PASS, 'res.partner', 'search', [[['name', 'ilike', "Deco"]]])
 
+print(object_proxy.execute_kw(DB, uid, PASS, 'res.partner', 'name_get', [id]))  # Return [[id and name]]
 
+# print(object_proxy.execute_kw(
+#     DB, uid, PASS,'res.partner', 'fields_get',
+#     [], {'attributes': ['string', 'help', 'type']}), sep="\n")
 

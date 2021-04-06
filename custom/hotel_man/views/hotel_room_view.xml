@@ -46,10 +46,21 @@
             </field>
         </record>
 
+         <record model="ir.ui.view" id="view_hotel_room_pivot">
+            <field name="name">Hotel Room Pivot View</field>
+            <field name="model">hotel.room</field>
+            <field name="arch" type="xml">
+                <pivot string="registration" sample="1">
+                    <field name="room_type_id" type="row"/>
+                    <field name="room_price" type="measure" widget="float_time"/>
+                </pivot>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="hotel_room_action">
             <field name="name">Hotel Management</field>
             <field name="res_model">hotel.room</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,pivot</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Enter Details of Room</p>
             </field>
