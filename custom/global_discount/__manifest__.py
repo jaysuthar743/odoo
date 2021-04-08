@@ -11,11 +11,12 @@
     'website': "http://www.brainvire.com",
     'category': 'sale',
     'version': '0.1',
-    'depends': ['base', 'sale'],
+    'depends': ['base', 'sale', 'web', 'base'],
     'data': [
         # 'security/ir.model.access.csv',
-        'views/global_discount_view.xml',
+        'views/global_discount_view.xml'
     ],
+    'qweb': ['static/my_pivot_view.xml'],
     'demo': [
         # 'demo/demo.xml',
     ],

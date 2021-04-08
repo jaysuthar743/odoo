@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    img in sale order form    -->
+    <record model="ir.ui.view" id="view_sale_order_form_image">
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='order_lines']//field[@name='order_line']//tree//field[@name='product_template_id']"
+                   position="after">
+                <field name="img" widget="image" style="width:40px" string="Image"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    img in stock picking form    -->
+    <record model="ir.ui.view" id="view_stock_picking_form_image">
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='operations']//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']"
+                   position="before">
+                <field name="img" widget="image" style="width:40px" string="Image"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    img in account move form    -->
+    <record model="ir.ui.view" id="view_account_move_form_image">
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook//page[@id='invoice_tab']//field[@name='invoice_line_ids']//tree//field[@name='product_id']"
+                   position="after">
+                <field name="img" widget="image" style="width:40px" string="Image"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    img in sale order qweb report    -->
+    <template id="sale_global_discount_template_with_image" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@class='page']//table[@class='table table-sm o_main_table']//thead//th[@name='th_description']"
+               position="after">
+            <th name="th_image">Image</th>
+        </xpath>
+
+        <xpath expr="//div[@class='page']//table[@class='table table-sm o_main_table']//tbody//td[@name='td_name']"
+               position="after">
+            <td name="td_img">
+                <img t-attf-src="   data:image/jpg;base64,{{ line.img }}" style="width:35%; height:35px"/>
+            </td>
+        </xpath>
+
+    </template>
+
+</odoo>
+

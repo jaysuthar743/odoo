@@ -73,7 +73,7 @@ class HotelRoomType(models.Model):
     _description = 'Hotel Room Type'
     _rec_name = "room_type"
 
-    room_type = fields.Char("Room Type.")
+    room_type = fields.Char("Room Type.", required=True)
 
 
 class HotelGuest(models.Model):

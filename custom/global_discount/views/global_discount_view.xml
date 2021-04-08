@@ -36,4 +36,24 @@
         </xpath>
     </template>
 
+    <record model="ir.ui.view" id="sale_order_pivot_view_extend">
+        <field name="inherit_id" ref="sale.view_sale_order_pivot"/>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot/field[@name='amount_total']" position="after">
+                <field name="global_discount" type="measure"/>
+                <field name="date_order" interval="hour" type="row"/>
+            </xpath>
+            <xpath expr="//pivot/field[@name='date_order']" position="replace">
+                <field name="name" type="row"/>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="demo_example_ext_js" name="Demo Example Ext Js" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/global_discount/static/pivot_extend.js"></script>
+        </xpath>
+    </template>
+
 </odoo>

@@ -1,0 +1,11 @@
+<template>
+
+    <t t-name="Pivot" t-extend="web.PivotGroupBySelection">
+        <t t-jquery="div.dropdown-menu o_pivot_field_menu show" t-operation="append">
+            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item"
+               t-on-click.prevent="_onClickMenuGroupBy(field, 'hour')">Hour</a>
+        </t>
+    </t>
+</template>
+
+<!--https://github.com/odoo/odoo/blob/5064bfa85dcf35410ed0e0053b675debf6883484/addons/web/static/lib/qweb/qweb2.js#L267-L269-->

@@ -81,18 +81,70 @@
             <field name="arch" type="xml">
                 <pivot string="Registration" sample="1">
                     <field name="room_type_id" type="row"/>
+                    <field name="reg_state" type="row"/>
                 </pivot>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_hotel_reg_kanban">
+            <field name="name">Hotel Registration Kanban View</field>
+            <field name="model">hotel.room.registration</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="reg_no"/>
+                    <field name="reg_state"/>
+                    <field name="room_type_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h3 style="color:sky"><strong><field name="reg_no"/></strong></h3>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <h4><span class="badge badge-pill"><field name="reg_state"
+                                                                                  widget="label_selection"/></span></h4>
+                                    </div>
+                                </div>
+                                <div>
+                                    <field name="room_type_id"/>
+                                </div>
+                                <div>
+                                    <strong>Price: </strong><field name="total_price"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_hotel_reg_search">
+            <field name="name">Hotel Registration Search View</field>
+            <field name="model">hotel.room.registration</field>
+            <field name="arch" type="xml">
+                <search string="Search Student">
+                    <!--  <field name="room_type_id" filter_domain="['|',('doctor_id', 'ilike', self),('name', 'ilike', self) ]"/>-->
+                    <field name="room_type_id"/>
+                    <group>
+                        <filter name="groupby_room_type" string="Room Type"
+                                context="{'group_by':'room_type_id'}"></filter>
+                    </group>
+                </search>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="hotel_room_registration_action">
             <field name="name">Hotel Management</field>
             <field name="res_model">hotel.room.registration</field>
-            <field name="view_mode">tree,form,search,pivot</field>
+            <field name="view_mode">tree,form,search,pivot,kanban</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">Enter Details of Room</p>
             </field>
         </record>
+
 
         <menuitem id="hotel_reg_menu" name="Registration" parent="hotel_root"/>
         <menuitem id="hotel_reg_action" name="Registration" parent="hotel_reg_menu"
