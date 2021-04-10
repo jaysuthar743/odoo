@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_doctor_appointment_list">
+            <field name="name">Appointment List</field>
+            <field name="model">doctor.appointment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="age"/>
+                    <field name="dob"/>
+                    <field name="email"/>
+                    <field name="contact"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='view_doctor_appointment_form' model='ir.ui.view'>
+            <field name="name">Appointment Form</field>
+            <field name="model">doctor.appointment</field>
+            <field name="arch" type="xml">
+                <form string="hotel_room Details">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group col="2">
+                                <field name="name"/>
+                                <field name="age"/>
+
+                            </group>
+                            <group col="2">
+                                <field name="dob"/>
+                                <field name="email"/>
+                            </group>
+                            <group col="2">
+                                <field name="contact"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="view_doctor_appointment_action">
+            <field name="name">Appointment</field>
+            <field name="res_model">doctor.appointment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Enter Details of Appointment</p>
+            </field>
+        </record>
+
+
+        <menuitem name="Appointments" id="appointment_menu"/>
+
+        <menuitem name="Appointments" id="appointment_submenu" parent="appointment_menu"
+                  action="view_doctor_appointment_action"/>
+
+    </data>
+</odoo>

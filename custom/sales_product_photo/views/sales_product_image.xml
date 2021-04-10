@@ -46,7 +46,7 @@
         <xpath expr="//div[@class='page']//table[@class='table table-sm o_main_table']//tbody//td[@name='td_name']"
                position="after">
             <td name="td_img">
-                <img t-attf-src="   data:image/jpg;base64,{{ line.img }}" style="width:35%; height:35px"/>
+                <img t-attf-src="data:image/jpg;base64,{{ line.img }}" style="width:35%; height:35px"/>
             </td>
         </xpath>
 

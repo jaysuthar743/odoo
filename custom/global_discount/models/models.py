@@ -6,21 +6,12 @@ from odoo import models, fields, api, exceptions, _
 class SalesGlobalDiscount(models.Model):
     _inherit = "sale.order"
 
+
     discount_type = fields.Selection([('amount', 'Amount'),
                                       ('percentage', 'Percentage')],
                                      string="Discount Type",
                                      default='percentage')
     global_discount = fields.Float(string="Global Discount")
-
-    # @api.model
-    # def fields_get(self, allfields=None, attributes=None):
-    #     fields_to_hide = [
-    #         'date_order', 'name'
-    #     ]
-    #     res = super(SalesGlobalDiscount, self).fields_get(fields, attributes)
-    #     for field in fields_to_hide:
-    #         res[field]['selectable'] = False
-    #     return res
 
     @api.constrains("global_discount")
     def validate_global_discount(self):
