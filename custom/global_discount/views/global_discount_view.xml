@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="payment_term_id" position="after">
+                <field name="apply_discount"/>
                 <field name="discount_type" widget="selection_badge"/>
                 <field name="global_discount"/>
             </field>

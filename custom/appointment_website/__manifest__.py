@@ -10,7 +10,7 @@
     'website': "http://www.brainvire.com",
     'category': 'website',
     'version': '0.1',
-    'depends': ['base', 'website'],
+    'depends': ['base', 'website', 'sale'],
     'data': [
         'security/ir.model.access.csv',
         'views/doctor_appointment_form.xml',
