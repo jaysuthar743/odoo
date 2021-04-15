@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="cybersource_form" model="ir.ui.view">
+            <field name="name">payment.acquirer.form</field>
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <form string="Payment Acquirer">
+                    <field name="fees_implemented" invisible='1'/>
+                    <field name="token_implemented" invisible='1'/>
+                    <field name="authorize_implemented" invisible="1"/>
+                    <sheet>
+                        <field name="module_id" invisible="1"/>
+                        <field name="module_state" invisible="1"/>
+                        <field name="module_to_buy" invisible="1"/>
+                        <field name="inbound_payment_method_ids" invisible="1"/>
+                        <field name="image_128" widget="image" class="oe_avatar"/>
+                        <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'disabled')]}"/>
+                        <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'test')]}"/>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Name"/></h1>
+                            <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
+                                <a attrs="{'invisible': [('module_to_buy', '=', False)]}" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info" role="button">Upgrade</a>
+                                <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
+                            </div>
+                        </div>
+                        <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
+                            <div class="o_payment_acquirer_desc">
+                                <field name="description"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group name="payment_state">
+                                <field name="provider" groups="base.group_no_one" attrs="{'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
+                                <field name="state" widget="radio" attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
+                                <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
+                            </group>
+                        </group>
+                        <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
+                            <page string="Credentials" name="acquirer_credentials" attrs="{'invisible': [('provider', '=', 'manual')]}">
+                                <group name="acquirer">
+                                </group>
+                            </page>
+                            <page string="Configuration" name="configuration">
+                                <group name="acquirer_config">
+                                    <group string="Payment Form" name="payment_form">
+                                        <field name="display_as" placeholder="If not defined, the acquirer name will be used."/>
+                                        <field name="payment_icon_ids" widget="many2many_tags"/>
+                                        <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
+                                        <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                        <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                        <field name="view_template_id" groups="base.group_no_one"/>
+                                        <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
+                                        <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
+                                        <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
+                                    </group>
+                                    <group string="Availability" name="availability">
+                                        <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere."/>
+                                    </group>
+                                    <group string="Payment Followup" name="payment_followup">
+                                        <field name="journal_id" context="{'default_type': 'bank'}"
+                                          attrs="{'required': [('state', '!=', 'disabled'), ('provider', 'not in', ['manual', 'transfer'])]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Fees" name="fees" attrs="{'invisible': [('fees_implemented', '=', False)]}">
+                                <group name="payment_fees">
+                                    <field name="fees_active"/>
+                                    <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                </group>
+                            </page>
+                            <page string="Messages"
+                                name="messages"
+                                attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
+                                <group>
+                                    <field name="pre_msg"/>
+                                    <field name="auth_msg" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                    <field name="pending_msg"/>
+                                    <field name="done_msg"/>
+                                    <field name="cancel_msg"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <template id="payment_authorize_redirect" name="Payment Authorize">
+            <script type="text/javascript">
+                window.location.href = '<t t-esc="return_url"/>';
+            </script>
+        </template>
+
+        <template id="cybersource_s2s_form">
+            <input type="hidden" name="data_set" value="/payment/authorize/s2s/create_json_3ds"/>
+            <input type="hidden" name="acquirer_id" t-att-value="id"/>
+            <input type="hidden" name="acquirer_state" t-att-value="acq.state"/>
+            <input type="hidden" name="login_id" t-att-value="acq.sudo().cybersource_login"/>
+            <input class="d-none" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+            <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+         </template>
+
+         <template id="assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/payment_authorize/static/src/js/payment_form.js"></script>
+            </xpath>
+        </template>
+</odoo>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="acquirer_form_cybersource" model="ir.ui.view">
+        <field name="name">acquirer.form.cybersource</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'cybersource')]}">
+                    <field name="cybersource_login"
+                           attrs="{'required':[ ('provider', '=', 'cybersource'), ('state', '!=', 'disabled')]}"/>
+                    <field name="cybersource_transaction_key" password="True"
+                           attrs="{'required':[ ('provider', '=', 'cybersource'), ('state', '!=', 'disabled')]}"/>
+                    <a colspan="2"
+                       href="https://www.odoo.com/documentation/user/online/ecommerce/shopper_experience/authorize.html"
+                       target="_blank">How to get paid with Authorize.Net</a>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="token_form_cybersource" model="ir.ui.view">
+        <field name='name'>payment.token.form</field>
+        <field name='model'>payment.token</field>
+        <field name="inherit_id" ref="payment.payment_token_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="acquirer_ref"]' position='after'>
+                <field name="authorize_profile"
+                       attrs="{'invisible':['|', ('provider', '!=', 'cybersource'), ('save_token', '=', 'none')]}"/>
+                <field name="provider" invisible='1'/>
+                <field name="save_token" invisible='1'/>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="default_cybersource_button">
+        <input type="hidden" name="data_set" t-att-data-action-url="tx_url"/>
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        <t t-if="return_url">
+            <input type="hidden" name="return_url" t-att-value="return_url"/>
+        </t>
+        <input type="hidden" name="reference" t-att-value="reference"/>
+        <input type="hidden" name="amount" t-att-value="amount"/>
+        <input type="hidden" name="currency" t-att-value="currency.name"/>
+    </template>
+
+    <record id="payment_acquirer_cybersource" model="payment.acquirer">
+        <field name="name">CyberSource</field>
+        <field name="display_as">(powered by Cybersource)</field>
+        <field name="sequence">3</field>
+        <field name="view_template_id" ref="payment_cybersource.default_cybersource_button"/>
+        <field name="image_128" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
+        <field name="module_id" ref="base.module_payment_cybersource"/>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards and e-checks.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Manual Capture</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
+            </ul>
+        </field>
+        <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+    </record>
+
+</odoo>
